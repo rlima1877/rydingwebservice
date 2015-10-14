@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Map";
+}
+@model Ryding.Data.Bus
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=drawing"></script>
+    <script>
+        $(document).ready(function () {
+            initMap()
+        });
+    </script>
+</head>
+<body>
+    <div style="z-index: 999; position:absolute; right: 100px">
+        <div style="display: inline">@Html.DropDownList("busnumber", new SelectList(ViewBag.Buses, "BusNumber", "BusNumber"))</div>
+        <div style="display: inline"><button type="button" class="btn btn-info" id="GoButton">GO</button></div>
+    </div>
+    <div id="map" style="left: 0px; top: 0px; position:absolute; width:100%; height:100%"></div>
+</body>
+</html>

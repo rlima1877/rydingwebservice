@@ -8,7 +8,7 @@ namespace Ryding
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureAuth(app);
+
         }
     }
 }
