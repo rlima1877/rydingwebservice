@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using Ryding.Data;
+using Ryding.Models;
 
 namespace Ryding.Controllers
 {
@@ -51,6 +52,28 @@ namespace Ryding.Controllers
             if(bus != null)
             {
                 return Json(new { Latitude = bus.Latitude, Longitude = bus.Longitude }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(new { status = false }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetBusRoute(int BusID)
+        {
+            var points = await db.StopPoints.Where(p => p.BusID == BusID).ToListAsync();
+            List<StopPointModel> StopPointList = new List<StopPointModel>();
+            foreach (var point in points)
+            {
+                StopPointModel stopPoint = new StopPointModel();
+                stopPoint.BusID = (int)point.BusID;
+                stopPoint.Latitude = (double)point.Latitude;
+                stopPoint.Longitude = (double)point.Longitude;
+                stopPoint.Name = point.Name;
+                stopPoint.PointID = point.PointID;
+                StopPointList.Add(stopPoint);
+            }
+            if(points != null)
+            {
+                return Json(new { status = true, points = StopPointList }, JsonRequestBehavior.AllowGet);
             }
             return Json(new { status = false }, JsonRequestBehavior.AllowGet);
         }

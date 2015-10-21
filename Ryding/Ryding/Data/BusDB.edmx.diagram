@@ -5,7 +5,9 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="9ba88fbbccd04796bcecb1c3ea5d8b7f" Name="Diagram1">
-        <EntityTypeShape EntityType="Bus.Bus" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Bus.StopPoint" Width="1.5" PointX="3.375" PointY="1" />
+        <EntityTypeShape EntityType="Bus.Bus" Width="1.5" PointX="1.125" PointY="1.25" />
+        <AssociationConnector Association="Bus.FK__StopPoint__BusID__21B6055D" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

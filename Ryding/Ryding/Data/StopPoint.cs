@@ -12,20 +12,15 @@ namespace Ryding.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Bus
+    public partial class StopPoint
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Bus()
-        {
-            this.StopPoints = new HashSet<StopPoint>();
-        }
-    
-        public int BusID { get; set; }
-        public string BusNumber { get; set; }
+        public int PointID { get; set; }
         public Nullable<double> Latitude { get; set; }
         public Nullable<double> Longitude { get; set; }
+        public Nullable<int> Direction { get; set; }
+        public string Name { get; set; }
+        public Nullable<int> BusID { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<StopPoint> StopPoints { get; set; }
+        public virtual Bus Bus { get; set; }
     }
 }

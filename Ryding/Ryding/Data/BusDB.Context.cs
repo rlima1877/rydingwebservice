@@ -25,6 +25,7 @@ namespace Ryding.Data
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<StopPoint> StopPoints { get; set; }
         public virtual DbSet<Bus> Buses { get; set; }
     }
 }

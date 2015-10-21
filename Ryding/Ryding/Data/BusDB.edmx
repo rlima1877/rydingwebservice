@@ -4,49 +4,118 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Bus.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Bus.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Buses">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="BusID" />
           </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BusNumber" Type="varchar" MaxLength="25" Nullable="false" />
           <Property Name="Latitude" Type="float" />
           <Property Name="Longitude" Type="float" />
         </EntityType>
+        <EntityType Name="StopPoints">
+          <Key>
+            <PropertyRef Name="PointID" />
+          </Key>
+          <Property Name="PointID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Latitude" Type="float" />
+          <Property Name="Longitude" Type="float" />
+          <Property Name="Direction" Type="int" />
+          <Property Name="Name" Type="varchar" MaxLength="255" />
+          <Property Name="BusID" Type="int" />
+        </EntityType>
+        <Association Name="FK__StopPoint__BusID__21B6055D">
+          <End Role="Buses" Type="Self.Buses" Multiplicity="0..1" />
+          <End Role="StopPoints" Type="Self.StopPoints" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Buses">
+              <PropertyRef Name="BusID" />
+            </Principal>
+            <Dependent Role="StopPoints">
+              <PropertyRef Name="BusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="BusStoreContainer">
           <EntitySet Name="Buses" EntityType="Self.Buses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StopPoints" EntityType="Self.StopPoints" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__StopPoint__BusID__21B6055D" Association="Self.FK__StopPoint__BusID__21B6055D">
+            <End Role="Buses" EntitySet="Buses" />
+            <End Role="StopPoints" EntitySet="StopPoints" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Bus" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Bus">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="StopPoints" EntityType="Bus.StopPoint" />
+          <EntitySet Name="Buses" EntityType="Bus.Bus" />
+          <AssociationSet Name="FK__StopPoint__BusID__21B6055D" Association="Bus.FK__StopPoint__BusID__21B6055D">
+            <End Role="Bus" EntitySet="Buses" />
+            <End Role="StopPoint" EntitySet="StopPoints" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="StopPoint">
           <Key>
-            <PropertyRef Name="ID" />
+            <PropertyRef Name="PointID" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="BusNumber" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PointID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Latitude" Type="Double" />
           <Property Name="Longitude" Type="Double" />
+          <Property Name="Direction" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="BusID" Type="Int32" />
+          <NavigationProperty Name="Bus" Relationship="Bus.FK__StopPoint__BusID__21B6055D" FromRole="StopPoint" ToRole="Bus" />
         </EntityType>
-        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Buses" EntityType="Self.Bus" />
-        </EntityContainer>
+        <EntityType Name="Bus">
+          <Key>
+            <PropertyRef Name="BusID" />
+          </Key>
+          <Property Name="BusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BusNumber" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="Double" />
+          <Property Name="Longitude" Type="Double" />
+          <NavigationProperty Name="StopPoints" Relationship="Bus.FK__StopPoint__BusID__21B6055D" FromRole="Bus" ToRole="StopPoint" />
+        </EntityType>
+        <Association Name="FK__StopPoint__BusID__21B6055D">
+          <End Type="Bus.Bus" Role="Bus" Multiplicity="0..1" />
+          <End Type="Bus.StopPoint" Role="StopPoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bus">
+              <PropertyRef Name="BusID" />
+            </Principal>
+            <Dependent Role="StopPoint">
+              <PropertyRef Name="BusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BusStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="StopPoints">
+            <EntityTypeMapping TypeName="Bus.StopPoint">
+              <MappingFragment StoreEntitySet="StopPoints">
+                <ScalarProperty Name="BusID" ColumnName="BusID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Direction" ColumnName="Direction" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="PointID" ColumnName="PointID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Buses">
             <EntityTypeMapping TypeName="Bus.Bus">
               <MappingFragment StoreEntitySet="Buses">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="BusNumber" ColumnName="BusNumber" />
-                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
                 <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="BusNumber" ColumnName="BusNumber" />
+                <ScalarProperty Name="BusID" ColumnName="BusID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

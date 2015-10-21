@@ -15,8 +15,9 @@
 </head>
 <body>
     <div style="z-index: 999; position:absolute; right: 100px">
-        <div style="display: inline">@Html.DropDownList("busnumber", new SelectList(ViewBag.Buses, "BusNumber", "BusNumber"))</div>
+        <div style="display: inline">@Html.DropDownList("busnumber", new SelectList(ViewBag.Buses, "BusID", "BusNumber"))</div>
         <div style="display: inline"><button type="button" class="btn btn-info" id="GoButton">GO</button></div>
+        <div style="display: inline"><button type="button" class="btn btn-info" id="RouteButton">Show Bus Route</button></div>
     </div>
     <div id="map" style="left: 0px; top: 0px; position:absolute; width:100%; height:100%"></div>
 </body>

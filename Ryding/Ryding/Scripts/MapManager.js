@@ -1,5 +1,7 @@
-﻿function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
+﻿var map;
+
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
         minZoom: 3,
         center: new google.maps.LatLng(39.95, -75.15),
@@ -61,6 +63,38 @@
             dataType: "json",
             success: function (result) {
                 SetMarker(result.Latitude, result.Longitude);
+            },
+            error: function () {
+
+            }
+        });
+    });
+
+    $("#RouteButton").on('click', function () {
+        var busID = $('#busnumber').val();
+        var URL = window.location.toString();
+        var Base_URL = URL.substring(0, URL.indexOf('Map'));
+
+        $.ajax({
+            type: "GET",
+            url: Base_URL + "getbusroute?busid=" + busID,
+            dataType: "json",
+            success: function (result) {
+                if (result.status) {
+                    var busRouteCoordinates = [];
+                    var points = result.points;
+                    points.forEach(function (e) {
+                        busRouteCoordinates.push({lat: e.Latitude, lng: e.Longitude});
+                    });
+                    var busRoute = new google.maps.Polyline({
+                        path:busRouteCoordinates,
+                        geodesic: true,
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2
+                    });
+                    busRoute.setMap(map);
+                }
             },
             error: function () {
 
