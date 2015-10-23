@@ -5,9 +5,15 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="9ba88fbbccd04796bcecb1c3ea5d8b7f" Name="Diagram1">
-        <EntityTypeShape EntityType="Bus.StopPoint" Width="1.5" PointX="3.375" PointY="1" />
-        <EntityTypeShape EntityType="Bus.Bus" Width="1.5" PointX="1.125" PointY="1.25" />
-        <AssociationConnector Association="Bus.FK__StopPoint__BusID__21B6055D" />
+        <EntityTypeShape EntityType="Bus.Bus" Width="1.5" PointX="3.25" PointY="1.5" />
+        <EntityTypeShape EntityType="Bus.Direction" Width="1.5" PointX="1" PointY="1.875" />
+        <EntityTypeShape EntityType="Bus.Point" Width="1.5" PointX="7.75" PointY="1.625" />
+        <EntityTypeShape EntityType="Bus.StopPoint" Width="1.5" PointX="9.875" PointY="2.625" />
+        <AssociationConnector Association="Bus.FK__Buses__Direction__5629CD9C" />
+        <AssociationConnector Association="Bus.FK__Points__StopID__5FB337D6" />
+        <EntityTypeShape EntityType="Bus.Route" Width="1.5" PointX="5.5" PointY="1.75" />
+        <AssociationConnector Association="Bus.FK__Routes__BusID__5BE2A6F2" />
+        <AssociationConnector Association="Bus.FK__Points__RouteID__60A75C0F" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

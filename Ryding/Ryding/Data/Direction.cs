@@ -12,22 +12,18 @@ namespace Ryding.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Bus
+    public partial class Direction
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Bus()
+        public Direction()
         {
-            this.Routes = new HashSet<Route>();
+            this.Buses = new HashSet<Bus>();
         }
     
-        public int BusID { get; set; }
-        public string BusNumber { get; set; }
-        public Nullable<double> Latitude { get; set; }
-        public Nullable<double> Longitude { get; set; }
-        public Nullable<int> DirectionID { get; set; }
+        public int DirectionID { get; set; }
+        public string Type { get; set; }
     
-        public virtual Direction Direction { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Route> Routes { get; set; }
+        public virtual ICollection<Bus> Buses { get; set; }
     }
 }

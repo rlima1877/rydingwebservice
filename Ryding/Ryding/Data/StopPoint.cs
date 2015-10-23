@@ -14,13 +14,18 @@ namespace Ryding.Data
     
     public partial class StopPoint
     {
-        public int PointID { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public StopPoint()
+        {
+            this.Points = new HashSet<Point>();
+        }
+    
+        public int StopID { get; set; }
+        public string Name { get; set; }
         public Nullable<double> Latitude { get; set; }
         public Nullable<double> Longitude { get; set; }
-        public Nullable<int> Direction { get; set; }
-        public string Name { get; set; }
-        public Nullable<int> BusID { get; set; }
     
-        public virtual Bus Bus { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Point> Points { get; set; }
     }
 }

@@ -13,36 +13,109 @@
           <Property Name="BusNumber" Type="varchar" MaxLength="25" Nullable="false" />
           <Property Name="Latitude" Type="float" />
           <Property Name="Longitude" Type="float" />
+          <Property Name="DirectionID" Type="int" />
         </EntityType>
-        <EntityType Name="StopPoints">
+        <EntityType Name="Direction">
+          <Key>
+            <PropertyRef Name="DirectionID" />
+          </Key>
+          <Property Name="DirectionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Points">
           <Key>
             <PropertyRef Name="PointID" />
           </Key>
           <Property Name="PointID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Latitude" Type="float" />
-          <Property Name="Longitude" Type="float" />
-          <Property Name="Direction" Type="int" />
-          <Property Name="Name" Type="varchar" MaxLength="255" />
+          <Property Name="RouteID" Type="int" />
+          <Property Name="StopID" Type="int" />
+        </EntityType>
+        <EntityType Name="Routes">
+          <Key>
+            <PropertyRef Name="RouteID" />
+          </Key>
+          <Property Name="RouteID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StopNumber" Type="int" />
           <Property Name="BusID" Type="int" />
         </EntityType>
-        <Association Name="FK__StopPoint__BusID__21B6055D">
+        <EntityType Name="StopPoints">
+          <Key>
+            <PropertyRef Name="StopID" />
+          </Key>
+          <Property Name="StopID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" />
+          <Property Name="Latitude" Type="float" />
+          <Property Name="Longitude" Type="float" />
+        </EntityType>
+        <Association Name="FK__Buses__Direction__5629CD9C">
+          <End Role="Direction" Type="Self.Direction" Multiplicity="0..1" />
+          <End Role="Buses" Type="Self.Buses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Direction">
+              <PropertyRef Name="DirectionID" />
+            </Principal>
+            <Dependent Role="Buses">
+              <PropertyRef Name="DirectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Points__RouteID__60A75C0F">
+          <End Role="Routes" Type="Self.Routes" Multiplicity="0..1" />
+          <End Role="Points" Type="Self.Points" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Routes">
+              <PropertyRef Name="RouteID" />
+            </Principal>
+            <Dependent Role="Points">
+              <PropertyRef Name="RouteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Points__StopID__5FB337D6">
+          <End Role="StopPoints" Type="Self.StopPoints" Multiplicity="0..1" />
+          <End Role="Points" Type="Self.Points" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StopPoints">
+              <PropertyRef Name="StopID" />
+            </Principal>
+            <Dependent Role="Points">
+              <PropertyRef Name="StopID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Routes__BusID__5BE2A6F2">
           <End Role="Buses" Type="Self.Buses" Multiplicity="0..1" />
-          <End Role="StopPoints" Type="Self.StopPoints" Multiplicity="*" />
+          <End Role="Routes" Type="Self.Routes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Buses">
               <PropertyRef Name="BusID" />
             </Principal>
-            <Dependent Role="StopPoints">
+            <Dependent Role="Routes">
               <PropertyRef Name="BusID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="BusStoreContainer">
           <EntitySet Name="Buses" EntityType="Self.Buses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Direction" EntityType="Self.Direction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Points" EntityType="Self.Points" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Routes" EntityType="Self.Routes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StopPoints" EntityType="Self.StopPoints" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__StopPoint__BusID__21B6055D" Association="Self.FK__StopPoint__BusID__21B6055D">
+          <AssociationSet Name="FK__Buses__Direction__5629CD9C" Association="Self.FK__Buses__Direction__5629CD9C">
+            <End Role="Direction" EntitySet="Direction" />
             <End Role="Buses" EntitySet="Buses" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Points__RouteID__60A75C0F" Association="Self.FK__Points__RouteID__60A75C0F">
+            <End Role="Routes" EntitySet="Routes" />
+            <End Role="Points" EntitySet="Points" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Points__StopID__5FB337D6" Association="Self.FK__Points__StopID__5FB337D6">
             <End Role="StopPoints" EntitySet="StopPoints" />
+            <End Role="Points" EntitySet="Points" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Routes__BusID__5BE2A6F2" Association="Self.FK__Routes__BusID__5BE2A6F2">
+            <End Role="Buses" EntitySet="Buses" />
+            <End Role="Routes" EntitySet="Routes" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -50,25 +123,28 @@
     <edmx:ConceptualModels>
       <Schema Namespace="Bus" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="StopPoints" EntityType="Bus.StopPoint" />
           <EntitySet Name="Buses" EntityType="Bus.Bus" />
-          <AssociationSet Name="FK__StopPoint__BusID__21B6055D" Association="Bus.FK__StopPoint__BusID__21B6055D">
+          <EntitySet Name="Directions" EntityType="Bus.Direction" />
+          <EntitySet Name="Points" EntityType="Bus.Point" />
+          <EntitySet Name="StopPoints" EntityType="Bus.StopPoint" />
+          <AssociationSet Name="FK__Buses__Direction__5629CD9C" Association="Bus.FK__Buses__Direction__5629CD9C">
+            <End Role="Direction" EntitySet="Directions" />
             <End Role="Bus" EntitySet="Buses" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Points__StopID__5FB337D6" Association="Bus.FK__Points__StopID__5FB337D6">
             <End Role="StopPoint" EntitySet="StopPoints" />
+            <End Role="Point" EntitySet="Points" />
+          </AssociationSet>
+          <EntitySet Name="Routes" EntityType="Bus.Route" />
+          <AssociationSet Name="FK__Routes__BusID__5BE2A6F2" Association="Bus.FK__Routes__BusID__5BE2A6F2">
+            <End Role="Bus" EntitySet="Buses" />
+            <End Role="Route" EntitySet="Routes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Points__RouteID__60A75C0F" Association="Bus.FK__Points__RouteID__60A75C0F">
+            <End Role="Route" EntitySet="Routes" />
+            <End Role="Point" EntitySet="Points" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="StopPoint">
-          <Key>
-            <PropertyRef Name="PointID" />
-          </Key>
-          <Property Name="PointID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Latitude" Type="Double" />
-          <Property Name="Longitude" Type="Double" />
-          <Property Name="Direction" Type="Int32" />
-          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="BusID" Type="Int32" />
-          <NavigationProperty Name="Bus" Relationship="Bus.FK__StopPoint__BusID__21B6055D" FromRole="StopPoint" ToRole="Bus" />
-        </EntityType>
         <EntityType Name="Bus">
           <Key>
             <PropertyRef Name="BusID" />
@@ -77,17 +153,93 @@
           <Property Name="BusNumber" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
           <Property Name="Latitude" Type="Double" />
           <Property Name="Longitude" Type="Double" />
-          <NavigationProperty Name="StopPoints" Relationship="Bus.FK__StopPoint__BusID__21B6055D" FromRole="Bus" ToRole="StopPoint" />
+          <Property Name="DirectionID" Type="Int32" />
+          <NavigationProperty Name="Direction" Relationship="Bus.FK__Buses__Direction__5629CD9C" FromRole="Bus" ToRole="Direction" />
+          <NavigationProperty Name="Routes" Relationship="Bus.FK__Routes__BusID__5BE2A6F2" FromRole="Bus" ToRole="Route" />
         </EntityType>
-        <Association Name="FK__StopPoint__BusID__21B6055D">
+        <EntityType Name="Direction">
+          <Key>
+            <PropertyRef Name="DirectionID" />
+          </Key>
+          <Property Name="DirectionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Buses" Relationship="Bus.FK__Buses__Direction__5629CD9C" FromRole="Direction" ToRole="Bus" />
+        </EntityType>
+        <EntityType Name="Point">
+          <Key>
+            <PropertyRef Name="PointID" />
+          </Key>
+          <Property Name="PointID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RouteID" Type="Int32" />
+          <Property Name="StopID" Type="Int32" />
+          <NavigationProperty Name="StopPoint" Relationship="Bus.FK__Points__StopID__5FB337D6" FromRole="Point" ToRole="StopPoint" />
+          <NavigationProperty Name="Route" Relationship="Bus.FK__Points__RouteID__60A75C0F" FromRole="Point" ToRole="Route" />
+        </EntityType>
+        <EntityType Name="StopPoint">
+          <Key>
+            <PropertyRef Name="StopID" />
+          </Key>
+          <Property Name="StopID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="Double" />
+          <Property Name="Longitude" Type="Double" />
+          <NavigationProperty Name="Points" Relationship="Bus.FK__Points__StopID__5FB337D6" FromRole="StopPoint" ToRole="Point" />
+        </EntityType>
+        <Association Name="FK__Buses__Direction__5629CD9C">
+          <End Type="Bus.Direction" Role="Direction" Multiplicity="0..1" />
+          <End Type="Bus.Bus" Role="Bus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Direction">
+              <PropertyRef Name="DirectionID" />
+            </Principal>
+            <Dependent Role="Bus">
+              <PropertyRef Name="DirectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Points__StopID__5FB337D6">
+          <End Type="Bus.StopPoint" Role="StopPoint" Multiplicity="0..1" />
+          <End Type="Bus.Point" Role="Point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StopPoint">
+              <PropertyRef Name="StopID" />
+            </Principal>
+            <Dependent Role="Point">
+              <PropertyRef Name="StopID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Route">
+          <Key>
+            <PropertyRef Name="RouteID" />
+          </Key>
+          <Property Name="RouteID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StopNumber" Type="Int32" />
+          <Property Name="BusID" Type="Int32" />
+          <NavigationProperty Name="Bus" Relationship="Bus.FK__Routes__BusID__5BE2A6F2" FromRole="Route" ToRole="Bus" />
+          <NavigationProperty Name="Points" Relationship="Bus.FK__Points__RouteID__60A75C0F" FromRole="Route" ToRole="Point" />
+        </EntityType>
+        <Association Name="FK__Routes__BusID__5BE2A6F2">
           <End Type="Bus.Bus" Role="Bus" Multiplicity="0..1" />
-          <End Type="Bus.StopPoint" Role="StopPoint" Multiplicity="*" />
+          <End Type="Bus.Route" Role="Route" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Bus">
               <PropertyRef Name="BusID" />
             </Principal>
-            <Dependent Role="StopPoint">
+            <Dependent Role="Route">
               <PropertyRef Name="BusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Points__RouteID__60A75C0F">
+          <End Type="Bus.Route" Role="Route" Multiplicity="0..1" />
+          <End Type="Bus.Point" Role="Point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Route">
+              <PropertyRef Name="RouteID" />
+            </Principal>
+            <Dependent Role="Point">
+              <PropertyRef Name="RouteID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -97,25 +249,50 @@
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BusStoreContainer" CdmEntityContainer="Entities">
-          <EntitySetMapping Name="StopPoints">
-            <EntityTypeMapping TypeName="Bus.StopPoint">
-              <MappingFragment StoreEntitySet="StopPoints">
-                <ScalarProperty Name="BusID" ColumnName="BusID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Direction" ColumnName="Direction" />
-                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
-                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
-                <ScalarProperty Name="PointID" ColumnName="PointID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Buses">
             <EntityTypeMapping TypeName="Bus.Bus">
               <MappingFragment StoreEntitySet="Buses">
+                <ScalarProperty Name="DirectionID" ColumnName="DirectionID" />
                 <ScalarProperty Name="Longitude" ColumnName="Longitude" />
                 <ScalarProperty Name="Latitude" ColumnName="Latitude" />
                 <ScalarProperty Name="BusNumber" ColumnName="BusNumber" />
                 <ScalarProperty Name="BusID" ColumnName="BusID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Directions">
+            <EntityTypeMapping TypeName="Bus.Direction">
+              <MappingFragment StoreEntitySet="Direction">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="DirectionID" ColumnName="DirectionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Points">
+            <EntityTypeMapping TypeName="Bus.Point">
+              <MappingFragment StoreEntitySet="Points">
+                <ScalarProperty Name="StopID" ColumnName="StopID" />
+                <ScalarProperty Name="RouteID" ColumnName="RouteID" />
+                <ScalarProperty Name="PointID" ColumnName="PointID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StopPoints">
+            <EntityTypeMapping TypeName="Bus.StopPoint">
+              <MappingFragment StoreEntitySet="StopPoints">
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="StopID" ColumnName="StopID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Routes">
+            <EntityTypeMapping TypeName="Bus.Route">
+              <MappingFragment StoreEntitySet="Routes">
+                <ScalarProperty Name="BusID" ColumnName="BusID" />
+                <ScalarProperty Name="StopNumber" ColumnName="StopNumber" />
+                <ScalarProperty Name="RouteID" ColumnName="RouteID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

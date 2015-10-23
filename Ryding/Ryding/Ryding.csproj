@@ -180,13 +180,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BusDB.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Data\Direction.cs">
+      <DependentUpon>BusDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Point.cs">
+      <DependentUpon>BusDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Route.cs">
+      <DependentUpon>BusDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\StopPoint.cs">
       <DependentUpon>BusDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\StopPointModel.cs" />
+    <Compile Include="Models\BusModel.cs" />
+    <Compile Include="Models\PointModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
