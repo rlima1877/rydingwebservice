@@ -10,6 +10,22 @@ function initMap() {
     var marker;
     var markerIcon = new google.maps.MarkerImage("/Content/Images/bus.png", null, null, null, new google.maps.Size(32, 32));
 
+    var directionsService = new google.maps.DirectionsService();
+    var directionsDisplay = new google.maps.DirectionsRenderer();
+    directionsDisplay.setMap(map);
+
+    var request = {
+        origin: 'Chicago',
+        destination: 'New York',
+        travelMode: google.maps.DirectionsTravelMode.DRIVING
+    };
+
+    directionsService.route(request, function (response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(response);
+        }
+    });
+
     map.addListener('click', function (event) {
         if (marker != null)
             marker.setMap(null);
